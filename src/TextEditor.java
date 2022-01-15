@@ -13,14 +13,8 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Scanner;
 
-/**
- * Klasa glowna zawierajaca gui calego programu, inicjalizacje przyciskow oraz obiektow wraz z ich funkcjonalnoscia.
- */
-
 public class TextEditor extends JFrame implements ActionListener {
-    /**
-     * Tworzenie textArea, scrollPane, przyciskow formatowania czcionki, paska menu oraz jego opcji, opcje wyboru koloru, rodzaju oraz rozmiaru czcionki
-     */
+    
     JTextArea textArea;
     JScrollPane scrollPane;
     JSpinner fontSizeSpinner;
@@ -38,56 +32,29 @@ public class TextEditor extends JFrame implements ActionListener {
     JMenuItem exportPng;
 
     TextEditor() {
-        /**
-         * Wywolanie metody zamkniecia aplikacji
-         * Ustawienie tytulu gui
-         * Wyznaczenie rozmiaru okna aplikacji
-         * Ustawienie layoutu okna aplikacji
-         */
+        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Edytor Tekstu");
         this.setSize(600, 600);
         this.setLayout(new FlowLayout());
         this.setLocationRelativeTo(null);
 
-        /**
-         * Utowrzenie pola tekstowego textArea
-         * Wywolanie metody setLineWrap() odpowiedzialnej za przenoszenie tekstu do nowej linii
-         * Wywolanie metody setWrapStyleWord() odpowiedzialnej za przenoszenie slow do nowej linii
-         * Wywolanie metody setFont() odpowiedzialnej za ustawienie poczotkowej czcionki
-         */
         textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setFont(new Font("Arial", Font.PLAIN,20));
 
-        /**
-         * Utworzenie przycisku plainButton
-         * Wywolanie metody setFont na obiekcie textArea, ktora odpowiada za ustawienie standardowej czcionki
-         */
         plainButton = new JButton("Plain");
         plainButton.addChangeListener(changeEvent -> textArea.setFont(new Font(textArea.getFont().getName(), Font.PLAIN,(int) fontSizeSpinner.getValue())));
 
-        /**
-         * Utworzenie przycisku boldButton
-         * Wywolanie metody setFont na obiekcie textArea, ktora odpowiada za pogrubienie czcionki
-         */
         boldButton = new JButton("Bold");
         boldButton.setFont(new Font(boldButton.getFont().getName(),Font.BOLD, boldButton.getFont().getSize()));
         boldButton.addChangeListener(changeEvent -> textArea.setFont(new Font(textArea.getFont().getName(), Font.BOLD, (int) fontSizeSpinner.getValue())));
 
-        /**
-         * Utworzenie przycisku italicButton
-         * Wywolanie metody setFont na obiekcie textArea, ktora odpowiada za pochylenie czcionki
-         */
         italicButton = new JButton("Italic");
         italicButton.setFont(new Font(italicButton.getFont().getName(),Font.ITALIC, italicButton.getFont().getSize()));
         italicButton.addChangeListener(changeEvent -> textArea.setFont(new Font(textArea.getFont().getName(), Font.ITALIC, (int) fontSizeSpinner.getValue())));
 
-        /**
-         * Utowrzenie przycisku underlineButton
-         * Wywolanie metody setFont na obiekcie textArea, ktora odpowiada za podkreslenie tekstu
-         */
         underlineButton = new JButton("Underline text");
         underlineButton.addChangeListener(changeEvent -> {
             Font font = textArea.getFont();
@@ -96,44 +63,24 @@ public class TextEditor extends JFrame implements ActionListener {
             textArea.setFont(font.deriveFont(attributes));
         });
 
-        /**
-         * Utowrzenie paska do scrollowania obiektu textArea
-         * Wywolanie metody setPreferredSize(), ktora wyzancza rozmiar obiektu
-         * Wywolanie metody setVerticalScrollBarPolicy(), ktora wyznacza poziome polozenie obiektu
-         */
         scrollPane = new JScrollPane(textArea);
         scrollPane.setPreferredSize(new Dimension(550, 450));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        /**
-         * Utworzenie obiektu do wyboru rozmiaru czcionki
-         * Wywolanie metody setPreferredSize(), ktora wyzancza rozmiar obiektu
-         * Wywolanie metody setValue(), ktora wyswietla bazowy, wyznaczony rozmiar czcionki
-         */
         fontSizeSpinner = new JSpinner();
         fontSizeSpinner.setPreferredSize(new Dimension(50,25));
         fontSizeSpinner.setValue(20);
         fontSizeSpinner.addChangeListener(e -> textArea.setFont(new Font(textArea.getFont().getFamily(),Font.PLAIN,(int) fontSizeSpinner.getValue())));
-
-        /**
-         * Utworzenie przycisku do zmiany koloru czcionki
-         */
+        
         fontColorButton = new JButton("Color");
         fontColorButton.addActionListener(this);
 
         String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-
-        /**
-         * Utworzenie obiektu do wybory rodzaju/nazwy czcionki
-         * Wywolanie metody setSelectedItem() odpowiedzialnej za wyzanczenie oraz wyswietlenie wybranej bazowo rodzaju/nazwy czcionki
-         */
+        
         fontBox = new JComboBox(fonts);
         fontBox.addActionListener(this);
         fontBox.setSelectedItem("Arial");
 
-        /**
-         *Utworzenie paska menu
-         */
         //MENU BAR
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
@@ -147,18 +94,12 @@ public class TextEditor extends JFrame implements ActionListener {
         exportPng.addActionListener(this);
         exitItem.addActionListener(this);
 
-        /**
-         * Dodanie listy opcji
-         */
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.add(exportPng);
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
-        /**
-         * Dodanie wyznaczonych obiektow do okna aplikacji
-         */
         this.setJMenuBar(menuBar);
         this.add(plainButton);
         this.add(boldButton);
@@ -174,26 +115,15 @@ public class TextEditor extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        /**
-         * Warunek sprawdzajacy wybrany kolor
-         * Wywolanie metody setForeground(), ktora ustawia wybrany kolor
-         */
         if(e.getSource()==fontColorButton) {
             Color color = JColorChooser.showDialog(null, "Choose a color", Color.black);
             textArea.setForeground(color);
         }
 
-        /**
-         * Warunek sprawdzajacy wybrany rodzaj/nazwę czcionki
-         */
         if(e.getSource()==fontBox) {
             textArea.setFont(new Font((String)fontBox.getSelectedItem(),Font.PLAIN,textArea.getFont().getSize()));
         }
 
-        /**
-         * Warunek sprawdzajacy wybor opcji "openItem"
-         * Utworzenie okna fileChooser, pozwalajacego na wybor pliku tekstowego
-         */
         if(e.getSource()==openItem) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -218,10 +148,6 @@ public class TextEditor extends JFrame implements ActionListener {
             }
         }
 
-        /**
-         * Warunek sprawdzajacy wybor opcji "saveItem"
-         * Utworzenie okna fileChooser, pozwalajacego na zapsanie pliku tekstowego
-         */
         if(e.getSource()==saveItem) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -241,10 +167,6 @@ public class TextEditor extends JFrame implements ActionListener {
             }
         }
 
-        /**
-         * Warunek sprawdzajacy wybor opcji "exportPng"
-         * Opcja pozwala na wyeksportowanie tekstu do pliku graficznego
-         */
         if (e.getSource()==exportPng) {
             String text = textArea.getText();
             int height = textArea.getFont().getSize();
@@ -265,17 +187,11 @@ public class TextEditor extends JFrame implements ActionListener {
             System.out.println("Image Created");
         }
 
-        /**
-         * Warunek sprawdzajacy wybor opcji "exitItem", ktora odpowiada za zamknięcie programu
-         */
         if(e.getSource()==exitItem) {
             System.exit(0);
         }
     }
 
-    /**
-     * Funkcja main budujaca nasza aplikacje
-     */
     public static void main(String[] args) {
         new TextEditor();
     }
